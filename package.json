@@ -3,7 +3,8 @@
   "packageManager": "yarn@4.2.2",
   "scripts": {
     "dev": "NODE_ENV=development yarn exec nodemon src/index.ts",
-    "start": "node -r @swc-node/register src"
+    "start": "node -r @swc-node/register src",
+    "seed": "node -r @swc-node/register src/seed.ts"
   },
   "author": {
     "name": "Himanshu Pal",
