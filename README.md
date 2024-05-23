@@ -15,7 +15,4 @@
   ```sh
   yarn seed
   ```
-- Run the server using
-  ```sh
-  yarn dev
-  ```
+- Run the server using `yarn dev` for development or `yarn start` for deployment purpose
