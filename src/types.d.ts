@@ -1,3 +1,6 @@
+import type { z } from "zod";
+import type { contactBaseSchema } from "./schema";
+
 export interface IIdentifyResponse {
   contact: {
     primaryContactId: number;
@@ -6,3 +9,5 @@ export interface IIdentifyResponse {
     secondaryContactIds: number[]; // Array of all Contact IDs that are "secondary" to the primary contact
   };
 }
+
+export type RequestType = z.infer<typeof contactBaseSchema>;
