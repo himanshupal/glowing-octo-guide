@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 
 server.get("/", (_req, res) => res.sendStatus(200));
 
-server.get("/identify", async (req, res) => {
+server.post("/identify", async (req, res) => {
   try {
     const { email, phoneNumber } = contactBaseSchema.parse(req.body);
 
