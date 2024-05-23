@@ -37,8 +37,26 @@ server.get("/identify", async (req, res) => {
     }
 
     // Check if list has some primary contact
+    // Since it is ordered by createdAt ASC, we will get the oldest one here
     const primaryContactFound = contacts.find((contact) => contact.linkPrecedence === "primary");
     if (primaryContactFound) {
+      // Check & make other primary contacts secondary; if required
+
+      const otherPrimaryContacts = contacts.filter(({ linkPrecedence, id }) => linkPrecedence === "primary" && id !== primaryContactFound.id);
+      if (otherPrimaryContacts.length) {
+        await prisma.contact.updateMany({
+          where: {
+            id: {
+              in: otherPrimaryContacts.map(({ id }) => id),
+            },
+          },
+          data: {
+            linkPrecedence: "secondary",
+            linkedId: primaryContactFound.id,
+          },
+        });
+      }
+
       // We have found a primary contact, thus it will have all the secondary contacts in it's `linkedTo` part
       const secondaryContacts = await prisma.contact.findMany({
         where: {
@@ -55,6 +73,9 @@ server.get("/identify", async (req, res) => {
             },
           ],
         },
+        orderBy: {
+          createdAt: "asc",
+        },
       });
 
       const finalPayload = await generatePayloadCreatingContactAsRequired(primaryContactFound.id, [...contacts, ...secondaryContacts], prisma, req.body);
@@ -66,6 +87,9 @@ server.get("/identify", async (req, res) => {
     const secondaryContacts = await prisma.contact.findMany({
       where: {
         OR: [{ id: primaryContactId }, { AND: [{ linkedId: primaryContactId }, { linkedId: { notIn: contacts.map(({ id }) => id) } }] }],
+      },
+      orderBy: {
+        createdAt: "asc",
       },
     });
 

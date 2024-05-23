@@ -10,17 +10,17 @@ export const generatePayloadCreatingContactAsRequired = async (
   primaryContactId: number,
   contacts: Contact[],
   prisma: PrismaClient,
-  req: Required<RequestType>,
+  req: RequestType,
 ): Promise<IIdentifyResponse["contact"]> => {
   const emails = [...new Set(contacts.map(({ email }) => email!))];
   const phoneNumbers = [...new Set(contacts.map(({ phoneNumber }) => phoneNumber!))];
   const secondaryContactIds = [...new Set(contacts.map(({ id }) => id).filter((id) => id !== primaryContactId))];
 
   // Found a new `phoneNumber`, create new secondary contact
-  const newPhoneNumberFound = !!(req.phoneNumber && !(req.phoneNumber in phoneNumbers));
+  const newPhoneNumberFound = !!(req.phoneNumber && !phoneNumbers.includes(req.phoneNumber));
 
   // Found a new `email`, create new secondary contact
-  const newEmailFound = !!(req.email && !(req.email in emails));
+  const newEmailFound = !!(req.email && !emails.includes(req.email));
 
   if (newEmailFound || newPhoneNumberFound) {
     const newSecondaryContact = await prisma.contact.create({
