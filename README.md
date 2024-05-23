@@ -16,3 +16,7 @@
   yarn seed
   ```
 - Run the server using `yarn dev` for development or `yarn start` for deployment purpose
+
+---
+
+> Service is live at https://glowing-octo-guide.onrender.com
