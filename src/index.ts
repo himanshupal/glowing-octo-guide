@@ -32,7 +32,7 @@ server.get("/identify", async (req, res) => {
         },
       });
 
-      const finalPayload = await generatePayloadCreatingContactAsRequired(created.id, [created], req.body);
+      const finalPayload = await generatePayloadCreatingContactAsRequired(created.id, [created], prisma, req.body);
       return res.json({ contact: finalPayload });
     }
 
@@ -57,7 +57,7 @@ server.get("/identify", async (req, res) => {
         },
       });
 
-      const finalPayload = await generatePayloadCreatingContactAsRequired(primaryContactFound.id, [...contacts, ...secondaryContacts], req.body);
+      const finalPayload = await generatePayloadCreatingContactAsRequired(primaryContactFound.id, [...contacts, ...secondaryContacts], prisma, req.body);
       return res.json({ contact: finalPayload });
     }
 
@@ -69,7 +69,7 @@ server.get("/identify", async (req, res) => {
       },
     });
 
-    const finalPayload = await generatePayloadCreatingContactAsRequired(primaryContactId, [...contacts, ...secondaryContacts], req.body);
+    const finalPayload = await generatePayloadCreatingContactAsRequired(primaryContactId, [...contacts, ...secondaryContacts], prisma, req.body);
     return res.json({ contact: finalPayload });
   } catch (err) {
     if (err instanceof ZodError) {
